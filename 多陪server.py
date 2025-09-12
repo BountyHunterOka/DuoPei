@@ -205,11 +205,11 @@ def stop_grabbing():
 def start_talking():
     global voice_talking
     voice_talking = True
-    log("[开始连麦单]")
+    log("[过滤连麦单]")
 
 
 def stop_talking():
     global voice_talking
     voice_talking = False
-    log("[结束连麦单]")
+    log("[不过滤连麦单]")
 
