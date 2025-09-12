@@ -91,7 +91,7 @@ session = requests.Session()
 session.headers.update(HEADERS)
 
 running = False
-voice_talking = False
+voice_talking = True
 
 # ========== 日志输出 ==========
 def log(text):
