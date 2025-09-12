@@ -38,12 +38,12 @@ def stop_book():
 @app.get("/voice_start")
 def start_voice():
     start_talking()
-    return "开始连麦单"
+    return "过滤连麦单"
 
 @app.get("/voice_stop")
 def stop_voice():
     stop_talking()
-    return "结束连麦单"
+    return "不过滤连麦单"
 
 @app.get("/check_running")
 def check():
