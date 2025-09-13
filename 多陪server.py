@@ -52,6 +52,13 @@ def check():
     else:
      return "已暂停"
 
+@app.get("/check_talking")
+def check():
+    if voice_talking:
+     return "过滤连麦中"
+    else:
+     return "未过滤连麦"
+
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
