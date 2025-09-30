@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import threading
 import time
+import random
 import json
 import base64
 import requests
@@ -81,16 +82,16 @@ KEY_HEX = "81b120ef00216c33b266763abb02e6d1"
 IV_HEX = "e6a4cc0507dfe344b042289eeb945dce"
 
 HEADERS = {
-    "accept": "*/*",
-    "content-type": "application/x-www-form-urlencoded",
-    "platform": "app",
-    "authorization-token": "cf990524993944c4874248585d453276",
-    "sid": "47",
-    "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Html5Plus/1.0 (Immersed/20) uni-app",
-    "accept-language": "en-GB,en;q=0.9",
-    "accept-encoding": "gzip, deflate, br",
-    "pragma": "no-cache",
-    "cache-control": "no-cache"
+    "platform":"app",
+    "Accept":"*/*",
+    "Accept-Encoding":"gzip, deflate, br",
+    "Content-Type":"application/x-www-form-urlencoded",
+    "authorization-token":"cf990524993944c4874248585d453276",
+    "sid":"47",
+    "Host":"api.duopei.feiniaowangluo.com",
+    "User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 18 5 like Mac OS x)AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Html5Plus/1.0 (lmmersed/20) uni-app",
+    "Accept-Language":"en-GB,en;q=0.9",
+    "Connection":"keep-alive"
 }
 
 BASE_URL = "https://api.duopei.feiniaowangluo.com"
@@ -165,15 +166,16 @@ def confirm_order(order_id):
     data = {"id": order_id}
     try:
         while running:
+            time.sleep(random.randint(9, 15))
             resp = session.post(url, data=data, timeout=1.5)
             da = resp.json()
             confirm_rep = decrypt_aes_cbc(da["response"], KEY_HEX, IV_HEX)
             if not confirm_rep:
                 break
             log(f"[抢单结果] {confirm_rep}")
-            if '未满足' in confirm_rep:
-                log("等待中...继续尝试")
-                continue
+            # if '未满足' in confirm_rep:
+            #     log("等待中...继续尝试")
+            #     continue
             break
     except Exception as e:
         log(f"[抢单失败] {e}")
@@ -195,7 +197,7 @@ def run_loop(interval):
                 log("[无新订单]")
         else:
             log("[解密失败或网络异常]")
-        time.sleep(interval)
+        time.sleep(random.randint(2, 5))
 
 # ========== 控制函数 ==========
 def start_grabbing():
