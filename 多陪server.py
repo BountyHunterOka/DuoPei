@@ -160,13 +160,37 @@ def extract_order_id(decrypted_json_str):
         log(f"[提取订单 ID 失败] {e}")
     return None
 
+def extract_ts(decrypted_json_str):
+    try:
+        data = json.loads(decrypted_json_str)
+        li = data.get("list", [])
+        timestamp = li[0].get("createTime") / 1000
+        print(timestamp)
+
+        return timestamp
+    except Exception as e:
+        print(f"[提取订单 ts 失败] {e}")
+    return None
+
+
+def sleep_time(create_ts, wait_time):
+    now_ts = datetime.now().timestamp()
+    target_ts = create_ts + wait_time + 1
+    sleep_seconds = target_ts - now_ts
+    if sleep_seconds < 0:
+        random_sleep = random.uniform(1, 2.5)
+    else:
+        random_sleep = random.uniform(sleep_seconds, sleep_seconds+2)
+    print(sleep_seconds)
+    time.sleep(random_sleep)
+    
 # ========== 抢单 ==========
-def confirm_order(order_id):
+def confirm_order(order_id, create_ts):
     url = f"{BASE_URL}/s/c/order/confirm"
     data = {"id": order_id}
     try:
         while running:
-            time.sleep(random.randint(9, 10))
+            sleep_time(create_ts, 9.5)
             resp = session.post(url, data=data, timeout=1.5)
             da = resp.json()
             confirm_rep = decrypt_aes_cbc(da["response"], KEY_HEX, IV_HEX)
@@ -180,6 +204,7 @@ def confirm_order(order_id):
     except Exception as e:
         log(f"[抢单失败] {e}")
 
+
 # ========== 主循环 ==========
 def run_loop(interval):
     global running
@@ -190,8 +215,9 @@ def run_loop(interval):
         if decrypted:
             order_id = extract_order_id(decrypted)
             if order_id:
+                create_ts = extract_ts(decrypted)
                 log(f"[发现订单] ID = {order_id}")
-                threading.Thread(target=confirm_order, args=(order_id,), daemon=True).start()
+                threading.Thread(target=confirm_order, args=(order_id,create_ts), daemon=True).start()
                 # play_sound()
             else:
                 log("[无新订单]")
