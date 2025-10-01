@@ -189,17 +189,18 @@ def confirm_order(order_id, create_ts):
     url = f"{BASE_URL}/s/c/order/confirm"
     data = {"id": order_id}
     try:
+        sleep_time(create_ts, 9.5)
         while running:
-            sleep_time(create_ts, 9.5)
-            resp = session.post(url, data=data, timeout=1.5)
+            resp = session.post(url, data=data, timeout=3.5)
             da = resp.json()
             confirm_rep = decrypt_aes_cbc(da["response"], KEY_HEX, IV_HEX)
             if not confirm_rep:
                 break
             log(f"[抢单结果] {confirm_rep}")
-            # if '未满足' in confirm_rep:
-            #     log("等待中...继续尝试")
-            #     continue
+            if '未满足' in confirm_rep:
+                log("等待中...继续尝试")
+                time.sleep(9.5)
+                continue
             break
     except Exception as e:
         log(f"[抢单失败] {e}")
