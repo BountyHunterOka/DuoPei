@@ -210,7 +210,7 @@ def run_loop(interval):
     global running
     while running:
         now = datetime.now()
-        print("刷新时间 =", now.strftime("%H:%M:%S"))
+        print("刷新时间 =", datetime.now())
         decrypted = refresh_list()
         if decrypted:
             order_id = extract_order_id(decrypted)
