@@ -9,10 +9,10 @@ import base64
 import requests
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 # import os
 # import platform
-
+tz = timezone(timedelta(hours=8))
 app = FastAPI()
 
 app.add_middleware(
@@ -174,8 +174,8 @@ def extract_ts(decrypted_json_str):
 
 
 def sleep_time(create_ts, wait_time):
-    now_ts = datetime.now().timestamp()
-    target_ts = create_ts + wait_time + 1
+    now_ts = datetime.now(tz).timestamp()
+    target_ts = create_ts + wait_time + 6.5
     sleep_seconds = target_ts - now_ts
     if sleep_seconds < 0:
         random_sleep = random.uniform(1, 2.5)
@@ -209,8 +209,8 @@ def confirm_order(order_id, create_ts):
 def run_loop(interval):
     global running
     while running:
-        now = datetime.now()
-        print("刷新时间 =", datetime.now())
+        now = datetime.now(tz)
+        print("刷新时间 =", datetime.now(tz))
         decrypted = refresh_list()
         if decrypted:
             order_id = extract_order_id(decrypted)
