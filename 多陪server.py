@@ -197,7 +197,7 @@ def run_loop(interval):
                 log("[无新订单]")
         else:
             log("[解密失败或网络异常]")
-        time.sleep(random.randint(2, 3.5))
+        time.sleep(random.uniform(2, 3.5))
 
 # ========== 控制函数 ==========
 def start_grabbing():
