@@ -176,12 +176,12 @@ def extract_ts(decrypted_json_str):
 
 def sleep_time(create_ts, wait_time):
     now_ts = datetime.now(tz).timestamp()
-    target_ts = create_ts + wait_time + 6.5
+    target_ts = create_ts + wait_time + random.uniform(2.7, 5)
     sleep_seconds = target_ts - now_ts
     if sleep_seconds < 0:
         random_sleep = random.uniform(1, 2.5)
     else:
-        random_sleep = random.uniform(sleep_seconds, sleep_seconds+2)
+        random_sleep = random.uniform(sleep_seconds, sleep_seconds+4)
     print(sleep_seconds)
     time.sleep(random_sleep)
     
@@ -190,7 +190,7 @@ def confirm_order(order_id, create_ts):
     url = f"{BASE_URL}/s/c/order/confirm"
     data = {"id": order_id}
     try:
-        sleep_time(create_ts, 9.5)
+        sleep_time(create_ts, 7.5)
         while running:
             resp = session.post(url, data=data, timeout=3.5)
             da = resp.json()
@@ -200,7 +200,7 @@ def confirm_order(order_id, create_ts):
             log(f"[抢单结果] {confirm_rep}")
             if '未满足' in confirm_rep:
                 log("等待中...继续尝试")
-                time.sleep(9.5)
+                time.sleep(5.5)
                 continue
             break
     except Exception as e:
