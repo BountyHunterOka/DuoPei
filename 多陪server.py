@@ -190,7 +190,7 @@ def confirm_order(order_id, create_ts):
     url = f"{BASE_URL}/s/c/order/confirm"
     data = {"id": order_id}
     try:
-        sleep_time(create_ts, 10.5)
+        sleep_time(create_ts, 11.5)
         while running:
             resp = session.post(url, data=data, timeout=3.5)
             da = resp.json()
@@ -219,7 +219,7 @@ def run_loop(interval):
             if order_id:
                 create_ts = extract_ts(decrypted)
                 log(f"[发现订单] ID = {order_id}")
-                threading.Thread(target=confirm_order, args=(order_id,create_ts), daemon=True).start()
+                confirm_order(order_id, create_ts)
                 # play_sound()
             else:
                 log("[无新订单]")
