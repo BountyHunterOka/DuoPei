@@ -228,19 +228,18 @@ def run_loop(interval):
     global running
     while running:
         now = datetime.now(tz)
-        print("刷新时间 =", datetime.now(tz))
+        # print("刷新时间 =", datetime.now(tz))
         decrypted = refresh_list()
         if decrypted:
             order_id = extract_order_id(decrypted)
             if order_id:
-                print('有效订单')
-                print(decrypted)
+                print('有效订单: ', decrypted)
                 # create_ts = extract_ts(decrypted)
                 # log(f"[发现订单] ID = {order_id}")
                 # confirm_order(order_id, create_ts)
                 # play_sound()
             else:
-                log("[无新订单]")
+                # log("[无新订单]")
         else:
             log("[解密失败或网络异常]")
         time.sleep(random.uniform(2, 3.5))
