@@ -69,8 +69,8 @@ def check():
 async def receive_data(request: Request):
     raw = await request.body()  # 原始字节
     text = raw.decode("utf-8")  # 转成字符串
-    print("[收到文本]", text)
-    return {"status": "ok", "received": text}
+    print("有效订单, 来自僚机: ", text)
+    # return {"status": "ok", "received": text}
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
