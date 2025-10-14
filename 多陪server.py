@@ -238,8 +238,8 @@ def run_loop(interval):
                 # log(f"[发现订单] ID = {order_id}")
                 # confirm_order(order_id, create_ts)
                 # play_sound()
-            else:
-                # log("[无新订单]")
+            # else:
+            #     log("[无新订单]")
         else:
             log("[解密失败或网络异常]")
         time.sleep(random.uniform(2, 3.5))
